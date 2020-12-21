@@ -4,6 +4,7 @@ services:
     build: ./backend
     ports:
       - 8000:8000
+      - 40500:40500
     volumes:
       - ./backend:/usr/src/app
     environment:
