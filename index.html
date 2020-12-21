@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>WS</title>
+  </head>
+  <body>
+    <script>
+      const ws = new WebSocket('ws://localhost:40500');
+
+      ws.onopen = function () {
+
+      }
+
+      ws.onmessage = function (event) {
+        console.log(event);
+      }
+
+    </script>
+  </body>
+</html>
