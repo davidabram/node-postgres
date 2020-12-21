@@ -3,7 +3,7 @@
     "username": "azurediamond",
     "password": "hunter2",
     "database": "motiondb",
-    "host": "localhost",
+    "host": "db",
     "dialect": "postgres"
   }
 }
