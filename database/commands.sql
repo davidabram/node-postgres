@@ -17,3 +17,8 @@ WHERE drivers.id = 5
 SELECT * FROM drivers
 LEFT JOIN ownerships ON drivers.id = ownerships.driver_id
 LEFT JOIN vehicles ON vehicles.id = ownerships.vehicle_id
+
+SELECT DISTINCT drivers.id, drivers.last_name, drivers.first_name FROM drivers
+JOIN ownerships ON drivers.id = ownerships.driver_id
+JOIN vehicles ON vehicles.id = ownerships.vehicle_id
+WHERE vehicles.make IN ('Toyota', 'Honda')
