@@ -36,3 +36,50 @@ AND drivers.id IN (
   JOIN vehicles ON vehicles.id = ownerships.vehicle_id
   WHERE vehicles.make = 'Honda'
 )
+
+
+-- make Toyota model Camry
+
+SELECT * from vehicles
+WHERE vehicles.make = 'Toyota' AND vehicles.model = 'Camry'
+
+EXPLAIN ANALYZE SELECT * from vehicles
+WHERE vehicles.make = 'Toyota' AND vehicles.model = 'Camry'
+
+-- Seq Scan on vehicles  (cost=0.00..24.00 rows=1 width=31) (actual time=0.006..0.093 rows=2 loops=1)
+--   Filter: (((make)::text = 'Toyota'::text) AND ((model)::text = 'Camry'::text))
+--   Rows Removed by Filter: 998
+-- Planning time: 0.173 ms
+-- Execution time: 0.100 ms
+
+-- 0.273
+
+CREATE INDEX idx_vehicles_make_model
+ON vehicles(make, model);
+
+
+-- Index Scan using idx_vehicles_make_model on vehicles  (cost=0.28..8.29 rows=1 width=31) (actual time=0.011..0.013 rows=2 loops=1)
+--   Index Cond: (((make)::text = 'Toyota'::text) AND ((model)::text = 'Camry'::text))
+-- Planning time: 0.223 ms
+-- Execution time: 0.022 ms
+
+
+CREATE INDEX idx_vehicles_make
+ON vehicles(make);
+
+-- Index Scan using idx_vehicles_make_model on vehicles  (cost=0.28..8.29 rows=1 width=31) (actual time=0.015..0.016 rows=2 loops=1)
+--  Index Cond: (((make)::text = 'Toyota'::text) AND ((model)::text = 'Camry'::text))
+-- Planning time: 0.254 ms
+-- Execution time: 0.026 ms
+
+CREATE INDEX idx_vehicles_make_Toyota_model_Camry
+ON vehicles(make, model)
+WHERE make = 'Toyota' AND model = 'Camry';
+
+-- Index Scan using idx_vehicles_make_toyota_model_camry on vehicles  (cost=0.13..8.14 rows=1 width=31) (actual time=0.003..0.004 rows=2 loops=1)
+-- Planning time: 0.242 ms
+-- Execution time: 0.010 ms
+
+CREATE INDEX idx_vehicles_make_Toyota
+ON vehicles(make)
+WHERE make = 'Toyota';
