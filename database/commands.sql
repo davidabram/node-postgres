@@ -22,3 +22,17 @@ SELECT DISTINCT drivers.id, drivers.last_name, drivers.first_name FROM drivers
 JOIN ownerships ON drivers.id = ownerships.driver_id
 JOIN vehicles ON vehicles.id = ownerships.vehicle_id
 WHERE vehicles.make IN ('Toyota', 'Honda')
+
+SELECT DISTINCT drivers.id, drivers.last_name, drivers.first_name FROM drivers
+WHERE drivers.id IN (
+  SELECT DISTINCT drivers.id FROM drivers
+  JOIN ownerships ON drivers.id = ownerships.driver_id
+  JOIN vehicles ON vehicles.id = ownerships.vehicle_id
+  WHERE vehicles.make = 'Toyota'
+)
+AND drivers.id IN (
+  SELECT DISTINCT drivers.id FROM drivers
+  JOIN ownerships ON drivers.id = ownerships.driver_id
+  JOIN vehicles ON vehicles.id = ownerships.vehicle_id
+  WHERE vehicles.make = 'Honda'
+)
