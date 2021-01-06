@@ -9,3 +9,11 @@ CREATE TABLE ownerships(
   CONSTRAINT fk_vehicle FOREIGN KEY(vehicle_id) REFERENCES vehicles(id)
 );
 
+SELECT * FROM vehicles
+JOIN ownerships ON vehicles.id = ownerships.vehicle_id
+JOIN drivers ON drivers.id = ownerships.driver_id
+WHERE drivers.id = 5
+
+SELECT * FROM drivers
+LEFT JOIN ownerships ON drivers.id = ownerships.driver_id
+LEFT JOIN vehicles ON vehicles.id = ownerships.vehicle_id
