@@ -83,3 +83,77 @@ WHERE make = 'Toyota' AND model = 'Camry';
 CREATE INDEX idx_vehicles_make_Toyota
 ON vehicles(make)
 WHERE make = 'Toyota';
+
+-- Vehicles - license_plates
+
+CREATE TABLE license_plates(id SERIAL primary key, license_plate_content varchar(50));
+
+ALTER TABLE vehicles
+ADD COLUMN license_plate_id integer;
+
+BEGIN;
+
+INSERT INTO license_plates (license_plate_content)
+SELECT license_plate FROM vehicles;
+
+UPDATE vehicles SET (license_plate_id) = (
+  SELECT id FROM license_plates
+  WHERE license_plates.license_plate_content = vehicles.license_plate
+  LIMIT 1
+)
+
+COMMIT;
+
+ALTER TABLE vehicles
+ADD CONSTRAINT fk_license_plate FOREIGN KEY(license_plate_id) REFERENCES license_plates(id);
+
+ALTER TABLE vehicles
+DROP license_plate;
+
+-- Vehicles - makes/models
+
+CREATE TABLE models(id SERIAL primary key, model_name varchar(50), make varchar(50));
+
+ALTER TABLE vehicles
+ADD COLUMN model_id integer;
+
+INSERT INTO models (model_name, make)
+SELECT model, make FROM vehicles;
+
+UPDATE vehicles SET (model_id) = (
+  SELECT id FROM models
+  WHERE vehicles.model = models.model_name
+  AND vehicles.make = models.make
+  LIMIT 1
+)
+
+ALTER TABLE vehicles
+ADD CONSTRAINT fk_model FOREIGN KEY(model_id) REFERENCES models(id);
+
+ALTER TABLE vehicles
+DROP model;
+
+ALTER TABLE vehicles
+DROP make;
+
+-- Models - makes
+
+CREATE TABLE makes(id SERIAL primary key, make_name varchar(50));
+
+ALTER TABLE models
+ADD COLUMN make_id integer;
+
+INSERT INTO makes (make_name)
+SELECT make FROM models;
+
+UPDATE models SET (make_id) = (
+  SELECT id FROM makes
+  WHERE models.make = makes.make_name
+  LIMIT 1
+)
+
+ALTER TABLE models
+ADD CONSTRAINT fk_make FOREIGN KEY(make_id) REFERENCES makes(id);
+
+ALTER TABLE models
+DROP make;
